@@ -105,6 +105,7 @@ def list_products():
 
     name = request.args.get("name")
     category = request.args.get("category")
+    available = request.args.get("available")
 
     products = []
     if name:
@@ -117,6 +118,10 @@ def list_products():
             products = Product.find_by_category(category_enum)
         except AttributeError as context:
             app.logger.info("Category [%s] does not exist", category)
+    elif available:
+        app.logger.info("Find by available: %s", available)
+        value = available.lower() in ["true", "yes", "1"]
+        products = Product.find_by_availability(value)
     else:
         app.logger.info("Find all")
         products = Product.all()
