@@ -154,6 +154,7 @@ class TestProductModel(unittest.TestCase):
         self.assertIsNotNone(product.id)
         # Update the product in the system with the new property values using the update() method.
         product.id = None
+        # Assert that the call to update produce an exception
         self.assertRaises(DataValidationError, product.update)
 
     def test_delete_a_product(self):
@@ -276,3 +277,18 @@ class TestProductModel(unittest.TestCase):
         for product in found_products:
             self.assertEqual(product.price, price)
         
+    def test_deserialize_errors(self):
+        """ It should Raise an error when deserialize validation finds an error """
+        # Create a product and insert a wrong availability type
+        product = ProductFactory()
+        product.available = f"wrong type"
+        # Assert that the deserialize produce an exception
+        self.assertRaises(DataValidationError, product.deserialize, product.serialize())
+
+        # Create a product
+        product = ProductFactory()
+        # Serialize and remove one attribute
+        serialized_product = product.serialize()
+        del serialized_product['name']
+        # Assert that the deserialize produce an exception 
+        self.assertRaises(DataValidationError, product.deserialize, serialized_product)       
