@@ -227,7 +227,7 @@ class TestProductModel(unittest.TestCase):
         for product in found_products:
             self.assertEqual(product.available, available)
 
-    def test_find_by_availability(self):
+    def test_find_by_category(self):
         """It should Find Products by Category"""
         # Create a batch of 10 Product objects using the ProductFactory and save them to the database.
         products = ProductFactory.create_batch(10)
