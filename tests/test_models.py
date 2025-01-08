@@ -268,3 +268,11 @@ class TestProductModel(unittest.TestCase):
         # Assert that each product's price matches the expected price.
         for product in found_products:
             self.assertEqual(product.price, price)
+        # Retrieve products from the database that have the specified price in str.
+        found_products = Product.find_by_price(f"{price:.2f}")
+        # Assert if the count of the found products matches the expected count.
+        self.assertEqual(found_products.count(), count)
+        # Assert that each product's price matches the expected price.
+        for product in found_products:
+            self.assertEqual(product.price, price)
+        
