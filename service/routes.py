@@ -22,7 +22,6 @@ from flask import jsonify, request, abort
 from flask import url_for  # noqa: F401 pylint: disable=unused-import
 from service.models import Product, Category
 from service.common import status  # HTTP Status Codes
-from urllib.parse import quote_plus
 from . import app
 
 
@@ -114,9 +113,9 @@ def list_products():
     elif category:
         app.logger.info("Find by category: %s", category)
         try:
-            category_enum  = getattr(Category, category.upper())
+            category_enum = getattr(Category, category.upper())
             products = Product.find_by_category(category_enum)
-        except AttributeError as context:
+        except AttributeError:
             app.logger.info("Category [%s] does not exist", category)
     elif available:
         app.logger.info("Find by available: %s", available)
@@ -129,6 +128,7 @@ def list_products():
     results = [product.serialize() for product in products]
     app.logger.info("Products returned: [%s]", len(results))
     return results, status.HTTP_200_OK
+
 
 ######################################################################
 # R E A D   A   P R O D U C T
@@ -151,6 +151,7 @@ def get_products(product_id):
         )
     app.logger.info("Returning product: %s", product.name)
     return product.serialize(), status.HTTP_200_OK
+
 
 ######################################################################
 # U P D A T E   A   P R O D U C T
@@ -177,7 +178,7 @@ def update_products(product_id):
     product.update()
     app.logger.info("Returning product: %s", product.name)
     return product.serialize(), status.HTTP_200_OK
-    
+
 
 ######################################################################
 # D E L E T E   A   P R O D U C T
@@ -197,7 +198,7 @@ def delete_products(product_id):
             status.HTTP_404_NOT_FOUND,
             f"No product ID {product_id} found",
         )
-    
+
     app.logger.info("Deleting product: %s", product.name)
     product.delete()
     return "", status.HTTP_204_NO_CONTENT

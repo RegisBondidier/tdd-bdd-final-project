@@ -227,7 +227,7 @@ class TestProductRoutes(TestCase):
 
     def test_delete_product_not_found(self):
         """It should Delete a Product"""
-        products = self._create_products(5)
+        _ = self._create_products(5)
         # delete product
         response = self.client.delete(f"{BASE_URL}/0")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -253,7 +253,7 @@ class TestProductRoutes(TestCase):
                 count += 1
         # send query for list of product with name
         response = self.client.get(
-            BASE_URL, 
+            BASE_URL,
             query_string=f"name={quote_plus(name)}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -266,7 +266,7 @@ class TestProductRoutes(TestCase):
 
         # Query a name that is not present
         response = self.client.get(
-            BASE_URL, 
+            BASE_URL,
             query_string=f"name={quote_plus('Inexistant')}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -283,7 +283,7 @@ class TestProductRoutes(TestCase):
                 count += 1
         # send query for list of product with name
         response = self.client.get(
-            BASE_URL, 
+            BASE_URL,
             query_string=f"category={quote_plus(category.name)}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -296,7 +296,7 @@ class TestProductRoutes(TestCase):
 
         # Query a category that is not present
         response = self.client.get(
-            BASE_URL, 
+            BASE_URL,
             query_string=f"category={quote_plus('Inexistant')}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -308,12 +308,12 @@ class TestProductRoutes(TestCase):
         products = self._create_products(10)
         count = 0
         for product in products:
-            if product.available == True:
+            if product.available is True:
                 count += 1
         # send query for list of product with name
         response = self.client.get(
-            BASE_URL, 
-            query_string=f"available=True"
+            BASE_URL,
+            query_string=f'{"available=True"}'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # verify that we have the same occurences
