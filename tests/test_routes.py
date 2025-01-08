@@ -253,7 +253,8 @@ class TestProductRoutes(TestCase):
                 count += 1
         # send query for list of product with name
         response = self.client.get(
-            BASE_URL, query_string=f"name={quote_plus(name)}"
+            BASE_URL, 
+            query_string=f"name={quote_plus(name)}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # verify that we have the same occurences
@@ -265,12 +266,42 @@ class TestProductRoutes(TestCase):
 
         # Query a name that is not present
         response = self.client.get(
-            BASE_URL, query_string=f"name={quote_plus('Inexistant')}"
+            BASE_URL, 
+            query_string=f"name={quote_plus('Inexistant')}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 0)
 
+    def test_query_by_category(self):
+        """It should Query Products by category"""
+        products = self._create_products(10)
+        category = products[0].category
+        count = 0
+        for product in products:
+            if product.category == category:
+                count += 1
+        # send query for list of product with name
+        response = self.client.get(
+            BASE_URL, 
+            query_string=f"category={quote_plus(category.name)}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # verify that we have the same occurences
+        data = response.get_json()
+        self.assertEqual(len(data), count)
+        # verify that we have the return product are the ones expected
+        for product in data:
+            self.assertEqual(product["category"], category.name)
+
+        # Query a category that is not present
+        response = self.client.get(
+            BASE_URL, 
+            query_string=f"category={quote_plus('Inexistant')}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 0)
 
     ######################################################################
     # Utility functions
