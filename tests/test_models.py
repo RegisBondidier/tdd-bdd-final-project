@@ -172,3 +172,23 @@ class TestProductModel(unittest.TestCase):
         products = Product.all()
         # Assert if the length of the products list is equal to 5, to verify that the five products created in the previous step have been successfully added to the database.
         self.assertEqual(len(products), 5)
+
+    def test_find_by_name(self):
+        """It should Find a Product by Name"""
+        products = ProductFactory.create_batch(5)
+        # Use a for loop to iterate over the products list and call the create() method on each product to save them to the database.
+        for product in products:
+            product.create()
+        # Retrieve the name of the first product in the products list.
+        name = products[0].name
+        # Count the number of occurrences of the product name in the list
+        count = 0
+        for product in products:
+            if product.name == name:                count += 1
+        # Call the find_by_name() method on the Product class to retrieve products from the database that have the specified name.
+        found_products = Product.find_by_name(name)
+        # Assert if the count of the found products matches the expected count.
+        self.assertEqual(found_products.count(), count)
+        # Assert that each product’s name matches the expected name.
+        for product in found_products:
+            self.assertEqual(product.name, name)
