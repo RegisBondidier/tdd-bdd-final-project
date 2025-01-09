@@ -109,20 +109,15 @@ def step_impl(context, button):
     button_id = button.lower() + '-btn'
     context.driver.find_element_by_id(button_id).click()
 
-@then(u'I should see the message "Success"')
-def step_impl(context):
+@then(u'I should see the message "{message}"')
+def step_impl(context, message):
     found = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.text_to_be_present_in_element(
             (By.ID, 'flash_message'),
-            "Success"
+            message
         )
     )
     assert(found)
-
-@then(u'I should see the message "Product has been Deleted!"')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should see the message "Product has been Deleted!"')
-
 
 @then(u'I should see "Fedora" in the results')
 def step_impl(context):
