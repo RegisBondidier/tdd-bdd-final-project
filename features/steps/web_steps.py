@@ -119,42 +119,19 @@ def step_impl(context, message):
     )
     assert(found)
 
-@then(u'I should see "Fedora" in the results')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should see "Fedora" in the results')
+@then(u'I should see "{product}" in the results')
+def step_impl(context, product):
+    found = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.text_to_be_present_in_element(
+            (By.ID, 'search_results'),
+            product
+        )
+    )
+    assert(found)
 
-@then(u'I should not see "Hat" in the results')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should not see "Hat" in the results')
-
-@then(u'I should see "Hat" in the results')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should see "Hat" in the results')
-
-
-@then(u'I should see "Shoes" in the results')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should see "Shoes" in the results')
-
-
-@then(u'I should see "Big Mac" in the results')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should see "Big Mac" in the results')
-
-
-@then(u'I should see "Sheets" in the results')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should see "Sheets" in the results')
-
-
-@then(u'I should not see "Shoes" in the results')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should not see "Shoes" in the results')
-
-
-@then(u'I should not see "Sheets" in the results')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then I should not see "Sheets" in the results')
+@then(u'I should not see "{product}" in the results')
+def step_impl(context, product):
+    assert(product not in context.driver.find_element_by_id('search_results').text)
 
 ##################################################################
 # This code works because of the following naming convention:
